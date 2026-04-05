@@ -28,21 +28,48 @@ If not already provided by the user, ask for each of these **one at a time**:
 
 Do not proceed until all 5 inputs are gathered.
 
-## Step 2: Launch Research Agents
+## Step 2: Launch Research Agents in Parallel
 
-Launch these 3 agents **in parallel** to gather data simultaneously:
+The 3 research agents are **independent** — they search different sources for different data, with no shared state. Dispatch all 3 in a **single message** with multiple Agent tool calls so they run concurrently.
 
-1. **`ideaprobe:market-researcher`** — Provide the problem statement and target audience. Ask for demand signal data.
-2. **`ideaprobe:competitor-scout`** — Provide the proposed solution and problem space. Ask for competitor landscape data.
-3. **`ideaprobe:sentiment-scanner`** — Provide the problem statement and target audience. Ask for community pain signals.
+### Agent Prompts
+
+Each agent needs self-contained context. Include the idea inputs gathered in Step 1.
+
+**Agent 1 — `ideaprobe:market-researcher`:**
+Provide the problem statement, target audience, and proposed solution. Ask for demand signal data covering search volume trends, community signal volume, market sizing, and trend trajectory.
+
+**Agent 2 — `ideaprobe:competitor-scout`:**
+Provide the proposed solution, problem space, and any known competitors. Ask for competitor profiles, gap analysis, and saturation assessment.
+
+**Agent 3 — `ideaprobe:sentiment-scanner`:**
+Provide the problem statement and target audience keywords. Ask for community pain signals, direct quotes, signal strength rating, and existing solution complaints.
+
+### How to Dispatch
+
+Send a single message with 3 Agent tool calls — one per research agent. All 3 will run concurrently:
+
+```
+Agent(description="Market research for [idea]", prompt="You are ideaprobe:market-researcher. [full context]...")
+Agent(description="Competitor analysis for [idea]", prompt="You are ideaprobe:competitor-scout. [full context]...")
+Agent(description="Sentiment scan for [idea]", prompt="You are ideaprobe:sentiment-scanner. [full context]...")
+```
+
+**Do NOT dispatch sequentially** — that wastes time. These agents have no dependencies on each other.
 
 ### Model Selection
 
 Use the least powerful model that can handle each role:
 - **Research agents** (market-researcher, competitor-scout, sentiment-scanner): Use a standard model. These agents perform structured web searches and extract data — moderate judgment required.
-- If a research agent returns shallow or incomplete results, re-dispatch with a more capable model.
+- If a research agent returns shallow or incomplete results, re-dispatch that agent with a more capable model.
 
-Wait for all 3 agents to complete before proceeding to scoring.
+### Handling Results
+
+Wait for all 3 agents to complete before proceeding to scoring. When results arrive:
+1. Read each agent's structured findings
+2. Verify each agent returned data (not just "no results found" for everything)
+3. If an agent returned shallow results, re-dispatch it with a more capable model
+4. Once all 3 have substantive findings, proceed to Step 3
 
 ## Step 3: Score Each Dimension
 

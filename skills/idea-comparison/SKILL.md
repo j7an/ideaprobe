@@ -25,13 +25,23 @@ If the user provides less than the full 5 inputs per idea (problem, audience, so
 
 ## Step 2: Validate Each Idea
 
-Run the `idea-validation` skill workflow on each idea:
-- Gather any missing inputs per idea
-- Launch research agents (can run validations in parallel for speed)
-- Score all 5 dimensions per idea
-- Run the validation reviewer on each
+Run the `idea-validation` skill workflow on each idea. Each validation is **independent** — different ideas, different searches, no shared state.
 
-This produces a full Validation Report per idea.
+### Parallel Dispatch Strategy
+
+For 2-3 ideas: dispatch all validations in parallel. Each validation launches its own 3 research agents, so you're running 6-9 agents concurrently.
+
+For 4-5 ideas: dispatch in batches of 2-3 to avoid overwhelming the agent pool. Wait for the first batch to complete before starting the next.
+
+### Per-Idea Validation
+
+For each idea, run the full `idea-validation` workflow:
+1. Gather any missing inputs for this specific idea
+2. Launch 3 research agents in parallel (as described in idea-validation Step 2)
+3. Score all 5 dimensions using agent findings
+4. Launch the validation reviewer to challenge the report
+
+This produces a full Validation Report per idea. All reports must be complete before proceeding to comparison.
 
 ## Step 3: Produce Ranked Comparison
 
