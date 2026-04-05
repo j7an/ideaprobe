@@ -4,6 +4,9 @@ docs/
 # Git worktrees
 .worktrees/
 
+# Test temporary files
+tests/tmp/
+
 # Logs
 logs
 *.log
