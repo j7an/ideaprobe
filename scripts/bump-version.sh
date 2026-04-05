@@ -90,20 +90,23 @@ case "${1:-}" in
         CURRENT=$(get_version "$FIRST_PATH" "$FIRST_FIELD")
 
         # Build exclude args for grep
+        # Apply each exclude as both --exclude (file) and --exclude-dir (directory)
         EXCLUDE_ARGS=""
         while IFS= read -r exclude; do
             [ -z "$exclude" ] && continue
-            EXCLUDE_ARGS="$EXCLUDE_ARGS --exclude-dir=$exclude"
+            EXCLUDE_ARGS="$EXCLUDE_ARGS --exclude=$exclude --exclude-dir=$exclude"
         done <<< "$EXCLUDES"
 
         # Search for version string in repo
-        FOUND=$(cd "$REPO_ROOT" && grep -r "$CURRENT" $EXCLUDE_ARGS --include="*.json" --include="*.md" --include="*.sh" -l 2>/dev/null || true)
+        # --include must come before --exclude for grep to respect both
+        FOUND=$(cd "$REPO_ROOT" && grep -r --include="*.json" --include="*.md" --include="*.sh" $EXCLUDE_ARGS "$CURRENT" -l 2>/dev/null || true)
 
-        # Filter out declared files
+        # Filter out declared files (normalize paths by stripping leading ./)
         DECLARED_PATHS=$(echo "$FILES" | cut -d'|' -f1)
         UNDECLARED=""
         for f in $FOUND; do
-            if ! echo "$DECLARED_PATHS" | grep -q "^$f$"; then
+            NORMALIZED=$(echo "$f" | sed 's|^\./||')
+            if ! echo "$DECLARED_PATHS" | grep -q "^${NORMALIZED}$"; then
                 UNDECLARED="$UNDECLARED $f"
             fi
         done
