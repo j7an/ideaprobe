@@ -58,7 +58,7 @@ Run these commands in order:
       claude plugin marketplace add https://github.com/j7an/ideaprobe.git
       claude plugin install ideaprobe@ideaprobe
 
-- [ ] Verify skills load: start a new Claude Code session, confirm getting-started is injected
+- [ ] Verify skills load: start a new Claude Code session, confirm using-ideaprobe is injected
 - [ ] If listed on official marketplace: verify `claude plugin update ideaprobe` picks up the new version
 
 ---

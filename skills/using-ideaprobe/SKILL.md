@@ -1,5 +1,5 @@
 ---
-name: getting-started
+name: using-ideaprobe
 description: "Bootstrap skill for IdeaProbe business idea validation. Use when the user mentions a business idea, asks 'is this worth building', wants to compare ideas, or is starting a new build cycle."
 ---
 
