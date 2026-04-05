@@ -188,6 +188,7 @@ get_plugin_root() {
 }
 
 # Portable timeout — macOS lacks GNU timeout
+# Fallback chain: timeout (Linux) → gtimeout (brew install coreutils) → perl
 run_with_timeout() {
     local seconds="$1"
     shift

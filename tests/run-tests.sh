@@ -2,6 +2,12 @@
 set -euo pipefail
 
 # IdeaProbe Test Runner
+#
+# Prerequisites:
+#   - Infrastructure tests: python3 (for JSON parsing)
+#   - Behavioral tests: Claude CLI (authenticated), IdeaProbe plugin installed
+#   - macOS: brew install coreutils (provides gtimeout for behavioral tests)
+#
 # Usage:
 #   ./tests/run-tests.sh              # Infrastructure tests only (default)
 #   ./tests/run-tests.sh --all        # Infrastructure + behavioral
