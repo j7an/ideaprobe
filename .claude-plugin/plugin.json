@@ -8,7 +8,5 @@
   },
   "repository": "https://github.com/j7an/ideaprobe",
   "license": "MIT",
-  "keywords": ["validation", "business-ideas", "market-research", "competitor-analysis", "mvp"],
-  "skills": "./skills/",
-  "agents": "./agents/"
+  "keywords": ["validation", "business-ideas", "market-research", "competitor-analysis", "mvp"]
 }
