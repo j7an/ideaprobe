@@ -1,5 +1,10 @@
 {
   "name": "ideaprobe",
   "version": "0.1.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "./tests/run-tests.sh",
+    "test:all": "./tests/run-tests.sh --all",
+    "test:verbose": "./tests/run-tests.sh --verbose"
+  }
 }
