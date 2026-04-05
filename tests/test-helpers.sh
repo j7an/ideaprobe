@@ -187,6 +187,33 @@ get_plugin_root() {
     echo "$REPO_ROOT"
 }
 
+# Portable timeout — macOS lacks GNU timeout
+run_with_timeout() {
+    local seconds="$1"
+    shift
+    if command -v timeout > /dev/null 2>&1; then
+        timeout "$seconds" "$@"
+    elif command -v gtimeout > /dev/null 2>&1; then
+        gtimeout "$seconds" "$@"
+    else
+        # Perl-based fallback (always available on macOS)
+        perl -e '
+            use POSIX ":sys_wait_h";
+            my $secs = shift @ARGV;
+            my $pid = fork();
+            if ($pid == 0) { exec @ARGV; die "exec failed: $!\n"; }
+            eval {
+                local $SIG{ALRM} = sub { kill "TERM", $pid; die "alarm\n" };
+                alarm $secs;
+                waitpid($pid, 0);
+                alarm 0;
+            };
+            if ($@ =~ /alarm/) { waitpid($pid, WNOHANG); exit 124; }
+            exit($? >> 8);
+        ' "$seconds" "$@"
+    fi
+}
+
 verbose_log() {
     if [ "$VERBOSE" = true ]; then
         echo "  [verbose] $*"

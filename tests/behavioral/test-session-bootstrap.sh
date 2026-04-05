@@ -8,7 +8,7 @@ TIMEOUT="${BEHAVIORAL_TIMEOUT:-300}"
 
 # Test 1: Claude demonstrates IdeaProbe awareness
 verbose_log "Running: claude -p 'What do you know about IdeaProbe?' (timeout: ${TIMEOUT}s)"
-output=$(timeout "$TIMEOUT" claude -p "What do you know about IdeaProbe? Be specific about its capabilities." 2>&1 || true)
+output=$(run_with_timeout "$TIMEOUT" claude -p "What do you know about IdeaProbe? Be specific about its capabilities." 2>&1 || true)
 verbose_log "Output length: ${#output} chars"
 
 # Should demonstrate real awareness, not a generic "I don't know"
@@ -23,7 +23,7 @@ assert_contains "$output" "skill\|Skill\|scoring\|verdict\|GO\|STOP\|EXPLORE" "C
 
 # Test 3: Claude knows about the founder profile
 verbose_log "Running: claude -p 'Does IdeaProbe use a founder profile?' (timeout: ${TIMEOUT}s)"
-profile_output=$(timeout "$TIMEOUT" claude -p "Does IdeaProbe use a founder profile? What is it for?" 2>&1 || true)
+profile_output=$(run_with_timeout "$TIMEOUT" claude -p "Does IdeaProbe use a founder profile? What is it for?" 2>&1 || true)
 verbose_log "Output length: ${#profile_output} chars"
 
 if echo "$profile_output" | grep -qi "profile\|founder\|skill\|fit\|user-profile"; then

@@ -8,7 +8,7 @@ TIMEOUT="${BEHAVIORAL_TIMEOUT:-300}"
 
 # Test 1: Claude lists IdeaProbe skills when asked directly
 verbose_log "Running: claude -p 'What skills does IdeaProbe provide?' (timeout: ${TIMEOUT}s)"
-output=$(timeout "$TIMEOUT" claude -p "What skills does IdeaProbe provide? List them briefly." 2>&1 || true)
+output=$(run_with_timeout "$TIMEOUT" claude -p "What skills does IdeaProbe provide? List them briefly." 2>&1 || true)
 verbose_log "Output length: ${#output} chars"
 
 assert_contains "$output" "idea-validation\|idea validation\|validation" "Claude mentions idea-validation skill"
@@ -17,7 +17,7 @@ assert_contains "$output" "competitor\|competitor-analysis" "Claude mentions com
 
 # Test 2: Implicit triggering from business context
 verbose_log "Running: claude -p 'I have a business idea for a SaaS tool' (timeout: ${TIMEOUT}s)"
-implicit_output=$(timeout "$TIMEOUT" claude -p "I have a business idea for a SaaS tool that helps freelancers track invoices. What should I do first?" 2>&1 || true)
+implicit_output=$(run_with_timeout "$TIMEOUT" claude -p "I have a business idea for a SaaS tool that helps freelancers track invoices. What should I do first?" 2>&1 || true)
 verbose_log "Output length: ${#implicit_output} chars"
 
 # Should reference IdeaProbe or validation — not just give generic advice
@@ -29,7 +29,7 @@ fi
 
 # Test 3: Explicit skill enumeration
 verbose_log "Running: claude -p 'List all available ideaprobe skills' (timeout: ${TIMEOUT}s)"
-enum_output=$(timeout "$TIMEOUT" claude -p "List all available ideaprobe skills with their names." 2>&1 || true)
+enum_output=$(run_with_timeout "$TIMEOUT" claude -p "List all available ideaprobe skills with their names." 2>&1 || true)
 verbose_log "Output length: ${#enum_output} chars"
 
 # Count how many known skill names appear
