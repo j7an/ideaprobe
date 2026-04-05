@@ -1,12 +1,16 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ideaprobe",
-  "displayName": "IdeaProbe",
   "description": "Business idea validation — structured scoring, parallel research, and data-backed verdicts before you build",
-  "version": "0.1.0",
-  "author": {
+  "owner": {
     "name": "Jia \"Jay\" Tan"
   },
-  "repository": "https://github.com/j7an/ideaprobe",
-  "license": "MIT",
-  "keywords": ["validation", "business-ideas", "market-research", "competitor-analysis", "mvp"]
+  "plugins": [
+    {
+      "name": "ideaprobe",
+      "description": "Business idea validation — structured scoring, parallel research, and data-backed verdicts before you build",
+      "source": "./",
+      "homepage": "https://github.com/j7an/ideaprobe"
+    }
+  ]
 }
