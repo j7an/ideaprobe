@@ -7,8 +7,8 @@ BUMP_SCRIPT="$REPO_ROOT/scripts/bump-version.sh"
 PKG_JSON="$REPO_ROOT/package.json"
 
 # Test 1: --audit exits 0 with no undeclared references
-output=$(bash "$BUMP_SCRIPT" --audit 2>&1)
-exit_code=$?
+exit_code=0
+output=$(bash "$BUMP_SCRIPT" --audit 2>&1) || exit_code=$?
 assert_exit_code 0 "$exit_code" "--audit exits 0 with no undeclared refs"
 assert_contains "$output" "No undeclared" "--audit reports no undeclared references"
 
@@ -19,7 +19,7 @@ current_version=$(python3 -c "import json; print(json.load(open('$PKG_JSON'))['v
 INJECTED_FILE="$REPO_ROOT/test-injected-version.md"
 echo "This file contains version $current_version for testing." > "$INJECTED_FILE"
 
-inject_output=$(bash "$BUMP_SCRIPT" --audit 2>&1)
+inject_output=$(bash "$BUMP_SCRIPT" --audit 2>&1) || true
 
 # Cleanup the injected file
 rm -f "$INJECTED_FILE"

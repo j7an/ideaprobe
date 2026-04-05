@@ -7,8 +7,8 @@ HOOK="$REPO_ROOT/hooks/session-start"
 SKILL_FILE="$REPO_ROOT/skills/using-ideaprobe/SKILL.md"
 
 # Test 1: Script exits 0 and outputs valid JSON
-output=$(bash "$HOOK" 2>&1)
-exit_code=$?
+exit_code=0
+output=$(bash "$HOOK" 2>&1) || exit_code=$?
 assert_exit_code 0 "$exit_code" "Hook exits with code 0"
 
 # Write output to temp file for JSON validation
@@ -42,8 +42,8 @@ assert_not_contains "$content" "^---$" "YAML frontmatter is stripped from conten
 
 # Test 5: Missing skill file — exits 0, no crash
 mv "$SKILL_FILE" "${SKILL_FILE}.bak"
-missing_output=$(bash "$HOOK" 2>&1)
-missing_exit=$?
+missing_exit=0
+missing_output=$(bash "$HOOK" 2>&1) || missing_exit=$?
 mv "${SKILL_FILE}.bak" "$SKILL_FILE"
 assert_exit_code 0 "$missing_exit" "Missing skill file: exits 0 gracefully"
 

@@ -7,8 +7,8 @@ BUMP_SCRIPT="$REPO_ROOT/scripts/bump-version.sh"
 PKG_JSON="$REPO_ROOT/package.json"
 
 # Test 1: --check exits 0 when versions are in sync
-output=$(bash "$BUMP_SCRIPT" --check 2>&1)
-exit_code=$?
+exit_code=0
+output=$(bash "$BUMP_SCRIPT" --check 2>&1) || exit_code=$?
 assert_exit_code 0 "$exit_code" "--check exits 0 when versions in sync"
 
 # Test 2: Reports the current version string
@@ -27,8 +27,8 @@ json.dump(data, open('$PKG_JSON', 'w'), indent=2)
 # Add trailing newline (matches bump-version.sh behavior)
 echo "" >> "$PKG_JSON"
 
-drift_output=$(bash "$BUMP_SCRIPT" --check 2>&1 || true)
-drift_exit=$?
+drift_exit=0
+drift_output=$(bash "$BUMP_SCRIPT" --check 2>&1) || drift_exit=$?
 
 # Restore original
 printf '%s' "$original" > "$PKG_JSON"

@@ -11,7 +11,7 @@ refs_checked=0
 for skill_file in "$REPO_ROOT"/skills/*/SKILL.md; do
     [ -f "$skill_file" ] || continue
     # Extract refs/ paths — match backtick-quoted or plain refs/... patterns
-    refs_found=$(grep -oE 'refs/[a-zA-Z0-9_-]+\.md' "$skill_file" | sort -u)
+    refs_found=$(grep -oE 'refs/[a-zA-Z0-9_-]+\.md' "$skill_file" | sort -u || true)
     for ref_path in $refs_found; do
         refs_checked=$((refs_checked + 1))
         if [ ! -f "$REPO_ROOT/$ref_path" ]; then
@@ -34,7 +34,7 @@ agents_checked=0
 # Known agent names referenced in skills (ideaprobe:<name> pattern)
 for skill_file in "$REPO_ROOT"/skills/*/SKILL.md; do
     [ -f "$skill_file" ] || continue
-    agent_refs=$(grep -oE 'ideaprobe:[a-zA-Z0-9_-]+' "$skill_file" | sort -u)
+    agent_refs=$(grep -oE 'ideaprobe:[a-zA-Z0-9_-]+' "$skill_file" | sort -u || true)
     for agent_ref in $agent_refs; do
         agent_name="${agent_ref#ideaprobe:}"
         # Skip skill references — only check agent references
@@ -65,7 +65,7 @@ router_checked=0
 
 if [ -f "$router_file" ]; then
     # Extract skill names from the router table (backtick-quoted names)
-    router_skills=$(grep -oE '`[a-zA-Z0-9_-]+`' "$router_file" | tr -d '`' | sort -u)
+    router_skills=$(grep -oE '`[a-zA-Z0-9_-]+`' "$router_file" | tr -d '`' | sort -u || true)
     for skill_name in $router_skills; do
         # Only check if it looks like a skill name (has a matching directory)
         # Skip generic words that happen to be in backticks
