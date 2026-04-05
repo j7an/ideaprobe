@@ -27,7 +27,7 @@ Unfair advantage: First-mover in CLI-native commit tooling, built by a developer
 Run the full validation. Do not ask me any questions — use the inputs above."
 
 verbose_log "Running: claude -p '...' --allowed-tools=all (timeout: ${TIMEOUT}s)"
-output=$(cd "$TEST_TMP_DIR" && timeout "$TIMEOUT" claude -p "$PROMPT" --allowed-tools=all 2>&1 || true)
+output=$(cd "$TEST_TMP_DIR" && run_with_timeout "$TIMEOUT" claude -p "$PROMPT" --allowed-tools=all 2>&1 || true)
 verbose_log "Output length: ${#output} chars"
 
 # Test 1: Output is substantial (agents were dispatched and returned data)
