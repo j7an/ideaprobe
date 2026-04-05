@@ -2,7 +2,7 @@
 
 This is a read-only template shipped with IdeaProbe. The populated version lives at `.ideaprobe/user-profile.md` in the user's project directory.
 
-Skills that load this file: `idea-validation`, `idea-generation`, `idea-comparison`, `mvp-scoping`, `getting-started`, `founder-profile`
+Skills that load this file: `idea-validation`, `idea-generation`, `idea-comparison`, `mvp-scoping`, `using-ideaprobe`, `founder-profile`
 
 ## Template
 

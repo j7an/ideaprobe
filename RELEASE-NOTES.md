@@ -5,7 +5,7 @@
 Initial release. Claude Code / Claude Desktop only.
 
 **Skills (9):**
-- `getting-started` — bootstrap router with founder profile setup
+- `using-ideaprobe` — bootstrap router with founder profile setup
 - `founder-profile` — view, update, reset founder profile
 - `idea-generation` — generate 3-5 idea candidates for a domain
 - `idea-validation` — full validation orchestrator with parallel research agents

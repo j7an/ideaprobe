@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Resolve the plugin root directory (one level up from hooks/)
 PLUGIN_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SKILL_FILE="$PLUGIN_ROOT/skills/getting-started/SKILL.md"
+SKILL_FILE="$PLUGIN_ROOT/skills/using-ideaprobe/SKILL.md"
 
 # Exit silently if the skill file doesn't exist
 if [ ! -f "$SKILL_FILE" ]; then

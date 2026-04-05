@@ -39,7 +39,7 @@ claude plugin uninstall ideaprobe
 
 | Skill | What it does | When to use |
 |-------|-------------|-------------|
-| `getting-started` | Bootstrap router | Automatic at session start |
+| `using-ideaprobe` | Bootstrap router | Automatic at session start |
 | `founder-profile` | View/update/reset your profile | When your skills, constraints, or goals change |
 | `idea-generation` | Generate 3-5 idea candidates | "What should I build in [domain]?" |
 | `idea-validation` | Full validation with GO/STOP verdict | "Is this idea worth building?" |

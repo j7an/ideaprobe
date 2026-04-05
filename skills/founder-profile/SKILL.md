@@ -37,7 +37,7 @@ Manage the founder profile used by IdeaProbe skills to score Founder Fit and per
 
 1. Confirm with the user: "This will delete your current profile and start fresh. Continue?"
 2. If confirmed, delete `.ideaprobe/user-profile.md`
-3. Run the full profile questionnaire (same as getting-started first-time setup):
+3. Run the full profile questionnaire (same as using-ideaprobe first-time setup):
    - Technical skills and domain expertise
    - Existing audience or distribution channel
    - Time availability and budget
