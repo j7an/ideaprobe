@@ -67,23 +67,30 @@ for test_file in "$SCRIPT_DIR"/behavioral/test-*.sh; do
 done
 
 # ─── Filter Tests ────────────────────────────
-filter_tests() {
-    local -n tests_ref=$1
-    local filter="$2"
-    local filtered=()
-    for test_file in "${tests_ref[@]}"; do
-        local basename
-        basename=$(basename "$test_file" .sh)
-        if [[ "$basename" == *"$filter"* ]]; then
-            filtered+=("$test_file")
-        fi
-    done
-    tests_ref=("${filtered[@]}")
-}
-
+# Inline filtering (no namerefs — compatible with bash 3.2 on macOS)
+# Guard empty array access for set -u compatibility
 if [ -n "$TEST_FILTER" ]; then
-    filter_tests INFRA_TESTS "$TEST_FILTER"
-    filter_tests BEHAVIORAL_TESTS "$TEST_FILTER"
+    FILTERED=()
+    if [ ${#INFRA_TESTS[@]} -gt 0 ]; then
+        for test_file in "${INFRA_TESTS[@]}"; do
+            basename=$(basename "$test_file" .sh)
+            if [[ "$basename" == *"$TEST_FILTER"* ]]; then
+                FILTERED+=("$test_file")
+            fi
+        done
+    fi
+    INFRA_TESTS=("${FILTERED[@]+"${FILTERED[@]}"}")
+
+    FILTERED=()
+    if [ ${#BEHAVIORAL_TESTS[@]} -gt 0 ]; then
+        for test_file in "${BEHAVIORAL_TESTS[@]}"; do
+            basename=$(basename "$test_file" .sh)
+            if [[ "$basename" == *"$TEST_FILTER"* ]]; then
+                FILTERED+=("$test_file")
+            fi
+        done
+    fi
+    BEHAVIORAL_TESTS=("${FILTERED[@]+"${FILTERED[@]}"}")
 fi
 
 # ─── Run Infrastructure Tests ────────────────
