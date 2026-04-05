@@ -1,0 +1,10 @@
+{
+  "files": [
+    { "path": "package.json", "field": "version" },
+    { "path": ".claude-plugin/plugin.json", "field": "version" },
+    { "path": ".claude-plugin/marketplace.json", "field": "version" }
+  ],
+  "audit": {
+    "exclude": ["RELEASE-NOTES.md", "docs/", "node_modules", ".git"]
+  }
+}
