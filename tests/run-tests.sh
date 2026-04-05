@@ -49,6 +49,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# --all implies --verbose (behavioral tests are slow; progress feedback is essential)
+if [ "$RUN_ALL" = true ]; then
+    VERBOSE=true
+fi
+
 export VERBOSE
 export BEHAVIORAL_TIMEOUT
 
