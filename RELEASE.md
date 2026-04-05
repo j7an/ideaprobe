@@ -81,7 +81,6 @@ Managed by `.version-bump.json` and `scripts/bump-version.sh`:
 |------|-------|
 | `package.json` | `version` |
 | `.claude-plugin/plugin.json` | `version` |
-| `.claude-plugin/marketplace.json` | `version` |
 
 Never edit versions manually — always use `bump-version.sh` to keep them in sync.
 
