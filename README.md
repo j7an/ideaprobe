@@ -6,9 +6,33 @@ IdeaProbe is a Claude Code plugin that gives your agent business idea validation
 
 ## Install
 
+Add the GitHub repository as a plugin marketplace, then install:
+
 ```bash
-# Claude Code
-/plugin install ideaprobe
+# Add the marketplace source (one-time setup)
+claude plugin marketplace add https://github.com/j7an/ideaprobe.git
+
+# Install the plugin
+claude plugin install ideaprobe@ideaprobe
+```
+
+Or from within a Claude Code session:
+
+```
+/plugin marketplace add https://github.com/j7an/ideaprobe.git
+/plugin install ideaprobe@ideaprobe
+```
+
+### Update
+
+```bash
+claude plugin update ideaprobe
+```
+
+### Uninstall
+
+```bash
+claude plugin uninstall ideaprobe
 ```
 
 ## Skills
