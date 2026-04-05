@@ -1,3 +1,9 @@
+# Local documentation (design specs, plans — not committed)
+docs/
+
+# Git worktrees
+.worktrees/
+
 # Logs
 logs
 *.log

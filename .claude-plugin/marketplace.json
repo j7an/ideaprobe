@@ -1,0 +1,12 @@
+{
+  "name": "ideaprobe",
+  "displayName": "IdeaProbe",
+  "description": "Business idea validation — structured scoring, parallel research, and data-backed verdicts before you build",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jia \"Jay\" Tan"
+  },
+  "repository": "https://github.com/j7an/ideaprobe",
+  "license": "MIT",
+  "keywords": ["validation", "business-ideas", "market-research", "competitor-analysis", "mvp"]
+}
