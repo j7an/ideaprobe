@@ -10,8 +10,8 @@ set -euo pipefail
 #
 # Usage:
 #   ./tests/run-tests.sh                  # Infrastructure tests only (default)
-#   ./tests/run-tests.sh --all            # Infrastructure + behavioral (~2 min)
-#   ./tests/run-tests.sh --integration    # Infrastructure + behavioral + integration (10-30 min)
+#   ./tests/run-tests.sh --behavioral     # Infrastructure + behavioral (~40s)
+#   ./tests/run-tests.sh --all            # Infrastructure + behavioral + integration (10-30 min)
 #   ./tests/run-tests.sh --test NAME      # Run a specific test (partial match)
 #   ./tests/run-tests.sh --verbose        # Show command output
 #   ./tests/run-tests.sh --timeout N      # Custom timeout for behavioral tests (default: 30)
@@ -19,7 +19,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # ─── Parse Arguments ──────────────────────────
-RUN_ALL=false
+RUN_BEHAVIORAL=false
 RUN_INTEGRATION=false
 TEST_FILTER=""
 VERBOSE=false
@@ -27,12 +27,12 @@ BEHAVIORAL_TIMEOUT=30
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --all)
-            RUN_ALL=true
+        --behavioral)
+            RUN_BEHAVIORAL=true
             shift
             ;;
-        --integration)
-            RUN_ALL=true
+        --all)
+            RUN_BEHAVIORAL=true
             RUN_INTEGRATION=true
             shift
             ;;
@@ -50,14 +50,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            echo "Usage: $0 [--all] [--integration] [--test NAME] [--verbose] [--timeout SECONDS]"
+            echo "Usage: $0 [--behavioral] [--all] [--test NAME] [--verbose] [--timeout SECONDS]"
             exit 1
             ;;
     esac
 done
 
-# --all and --integration imply --verbose (slow tests need progress feedback)
-if [ "$RUN_ALL" = true ]; then
+# --behavioral and --all imply --verbose (slow tests need progress feedback)
+if [ "$RUN_BEHAVIORAL" = true ]; then
     VERBOSE=true
 fi
 
@@ -148,7 +148,7 @@ check_claude_prereqs() {
 }
 
 # ─── Run Behavioral Tests ────────────────────
-if [ "$RUN_ALL" = true ] || [ -n "$TEST_FILTER" ]; then
+if [ "$RUN_BEHAVIORAL" = true ] || [ -n "$TEST_FILTER" ]; then
     if [ ${#BEHAVIORAL_TESTS[@]} -gt 0 ]; then
         echo ""
         echo -e "${BOLD}Behavioral Tests${NC} (${BEHAVIORAL_TIMEOUT}s timeout per prompt)"
@@ -166,7 +166,7 @@ if [ "$RUN_ALL" = true ] || [ -n "$TEST_FILTER" ]; then
 else
     if [ ${#BEHAVIORAL_TESTS[@]} -gt 0 ] && [ -z "$TEST_FILTER" ]; then
         echo ""
-        echo -e "${YELLOW}Skipped ${#BEHAVIORAL_TESTS[@]} behavioral test(s). Use --all to include them.${NC}"
+        echo -e "${YELLOW}Skipped ${#BEHAVIORAL_TESTS[@]} behavioral test(s). Use --behavioral to include them.${NC}"
     fi
 fi
 
@@ -192,7 +192,7 @@ if [ "$RUN_INTEGRATION" = true ] || [ -n "$TEST_FILTER" ]; then
 else
     if [ ${#INTEGRATION_TESTS[@]} -gt 0 ] && [ -z "$TEST_FILTER" ]; then
         echo ""
-        echo -e "${YELLOW}Skipped ${#INTEGRATION_TESTS[@]} integration test(s). Use --integration to include them.${NC}"
+        echo -e "${YELLOW}Skipped ${#INTEGRATION_TESTS[@]} integration test(s). Use --all to include them.${NC}"
     fi
 fi
 

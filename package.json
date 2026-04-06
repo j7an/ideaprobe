@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "./tests/run-tests.sh",
+    "test:behavioral": "./tests/run-tests.sh --behavioral",
     "test:all": "./tests/run-tests.sh --all",
-    "test:integration": "./tests/run-tests.sh --integration",
     "test:verbose": "./tests/run-tests.sh --verbose"
   }
 }
