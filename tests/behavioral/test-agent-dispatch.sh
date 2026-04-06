@@ -11,7 +11,7 @@ if [ "$TIMEOUT" -lt 600 ]; then
     TIMEOUT=600
 fi
 
-echo -e "  ${YELLOW}This test takes 5-10 minutes and uses ~\$50K-100K tokens.${NC}"
+echo -e "  ${YELLOW}This test takes 5-10 minutes and uses ~50K-100K tokens.${NC}"
 
 # Create a test project directory
 create_test_project
