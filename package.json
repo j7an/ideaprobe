@@ -5,6 +5,7 @@
   "scripts": {
     "test": "./tests/run-tests.sh",
     "test:behavioral": "./tests/run-tests.sh --behavioral",
+    "test:all:fast": "./tests/run-tests.sh --all --fast",
     "test:all": "./tests/run-tests.sh --all",
     "test:verbose": "./tests/run-tests.sh --verbose"
   }

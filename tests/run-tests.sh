@@ -12,6 +12,7 @@ set -euo pipefail
 #   ./tests/run-tests.sh                  # Infrastructure tests only (default)
 #   ./tests/run-tests.sh --behavioral     # Infrastructure + behavioral (~40s)
 #   ./tests/run-tests.sh --all            # Infrastructure + behavioral + integration (10-30 min)
+#   ./tests/run-tests.sh --all --fast     # Infrastructure + behavioral + fast integration (~3 min)
 #   ./tests/run-tests.sh --test NAME      # Run a specific test (partial match)
 #   ./tests/run-tests.sh --verbose        # Show command output
 #   ./tests/run-tests.sh --timeout N      # Custom timeout for behavioral tests (default: 30)
@@ -21,6 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # ─── Parse Arguments ──────────────────────────
 RUN_BEHAVIORAL=false
 RUN_INTEGRATION=false
+FAST_MODE=false
 TEST_FILTER=""
 VERBOSE=false
 BEHAVIORAL_TIMEOUT=30
@@ -34,6 +36,10 @@ while [[ $# -gt 0 ]]; do
         --all)
             RUN_BEHAVIORAL=true
             RUN_INTEGRATION=true
+            shift
+            ;;
+        --fast)
+            FAST_MODE=true
             shift
             ;;
         --test)
@@ -50,7 +56,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
-            echo "Usage: $0 [--behavioral] [--all] [--test NAME] [--verbose] [--timeout SECONDS]"
+            echo "Usage: $0 [--behavioral] [--all] [--all --fast] [--test NAME] [--verbose] [--timeout SECONDS]"
             exit 1
             ;;
     esac
@@ -63,6 +69,7 @@ fi
 
 export VERBOSE
 export BEHAVIORAL_TIMEOUT
+export FAST_MODE
 
 # ─── Source Helpers ───────────────────────────
 source "$SCRIPT_DIR/test-helpers.sh"
@@ -174,13 +181,29 @@ fi
 if [ "$RUN_INTEGRATION" = true ] || [ -n "$TEST_FILTER" ]; then
     if [ ${#INTEGRATION_TESTS[@]} -gt 0 ]; then
         echo ""
-        echo -e "${BOLD}Integration Tests${NC}"
-        echo -e "${YELLOW}Warning: Integration tests are slow (10-30 min) and use significant tokens.${NC}"
+        if [ "$FAST_MODE" = true ]; then
+            echo -e "${BOLD}Integration Tests${NC} (fast mode)"
+        else
+            echo -e "${BOLD}Integration Tests${NC}"
+            echo -e "${YELLOW}Warning: Integration tests are slow (10-30 min) and use significant tokens.${NC}"
+        fi
 
         if check_claude_prereqs; then
-            echo "Proceeding in 5s... (Ctrl+C to cancel)"
-            sleep 5
+            if [ "$FAST_MODE" != true ]; then
+                echo "Proceeding in 5s... (Ctrl+C to cancel)"
+                sleep 5
+            fi
             for test_file in "${INTEGRATION_TESTS[@]}"; do
+                # In fast mode, skip the full validation workflow
+                test_basename=$(basename "$test_file" .sh)
+                if [ "$FAST_MODE" = true ] && [ "$test_basename" = "test-validation-workflow" ]; then
+                    skip_test "Validation Workflow" "use --all without --fast for full run"
+                    continue
+                fi
+                # In regular mode, skip fast-only tests (they're redundant with full workflow)
+                if [ "$FAST_MODE" != true ] && [ "$test_basename" != "test-validation-workflow" ]; then
+                    continue
+                fi
                 source "$test_file"
             done
         else
@@ -192,7 +215,7 @@ if [ "$RUN_INTEGRATION" = true ] || [ -n "$TEST_FILTER" ]; then
 else
     if [ ${#INTEGRATION_TESTS[@]} -gt 0 ] && [ -z "$TEST_FILTER" ]; then
         echo ""
-        echo -e "${YELLOW}Skipped ${#INTEGRATION_TESTS[@]} integration test(s). Use --all to include them.${NC}"
+        echo -e "${YELLOW}Skipped integration test(s). Use --all or --all --fast to include them.${NC}"
     fi
 fi
 

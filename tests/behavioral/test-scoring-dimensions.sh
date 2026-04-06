@@ -7,7 +7,7 @@ setup_test "Scoring Dimensions"
 TIMEOUT="${BEHAVIORAL_TIMEOUT:-30}"
 
 verbose_log "Prompt: 'What are the 5 scoring dimensions in ideaprobe:idea-validation?' (timeout: ${TIMEOUT}s)"
-output=$(run_with_timeout "$TIMEOUT" claude -p "When using the ideaprobe:idea-validation skill, what are the 5 scoring dimensions? List only their names, one per line." 2>&1 || true)
+output=$(run_with_timeout "$TIMEOUT" claude -p "When using the ideaprobe:idea-validation skill, what are the 5 scoring dimensions? List only their names, one per line." < /dev/null 2>&1 || true)
 verbose_log "Output length: ${#output} chars"
 
 assert_contains "$output" "[Dd]emand" "Mentions demand signals dimension"
