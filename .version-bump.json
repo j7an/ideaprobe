@@ -4,6 +4,6 @@
     { "path": ".claude-plugin/plugin.json", "field": "version" }
   ],
   "audit": {
-    "exclude": ["RELEASE-NOTES.md", "docs", "node_modules", ".git", ".worktrees", "refs", "skills", "agents", "README.md"]
+    "exclude": ["docs", "node_modules", ".git", ".worktrees", "refs", "skills", "agents", "README.md"]
   }
 }
