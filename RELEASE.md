@@ -13,39 +13,52 @@ Quick reference for releasing a new version of IdeaProbe.
 
 ## Releasing a New Version
 
-Run these commands in order:
+### Phase 1: Version bump on a branch
 
     # 1. Start on main with latest changes
     git checkout main && git pull origin main
 
-    # 2. Bump version across all declared files
-    bash scripts/bump-version.sh 0.2.0   # replace with target version
+    # 2. Create release branch
+    VERSION=0.2.0   # replace with target version
+    git checkout -b "chore/release-v${VERSION}"
 
-    # 3. Verify versions are consistent
+    # 3. Bump version across all declared files
+    bash scripts/bump-version.sh "$VERSION"
+
+    # 4. Verify versions are consistent
     bash scripts/bump-version.sh --check
 
-    # 4. Audit for any undeclared version references
+    # 5. Audit for any undeclared version references
     bash scripts/bump-version.sh --audit
 
-    # 5. Update RELEASE-NOTES.md with new version entry
+    # 6. Update RELEASE-NOTES.md
     # Add a new section at the top: ## vX.Y.Z (YYYY-MM-DD)
+    # Only include changes for THIS version, not prior versions
 
-    # 6. Commit version bump
-    VERSION=$(python3 -c "import json; print(json.load(open('package.json'))['version'])")
-    git add -A
+    # 7. Commit and push
+    git add package.json .claude-plugin/plugin.json RELEASE-NOTES.md
     git commit -m "chore(release): v${VERSION}"
+    git push -u origin "chore/release-v${VERSION}"
 
-    # 7. Tag the release
+    # 8. Create PR and merge
+    gh pr create --title "chore(release): v${VERSION}" --body "Version bump to v${VERSION}"
+    # Merge via GitHub, then continue to Phase 2
+
+### Phase 2: Tag and release from main
+
+    # 9. Switch to main with the merged release commit
+    git checkout main && git pull origin main
+
+    # 10. Tag the release
+    VERSION=$(python3 -c "import json; print(json.load(open('package.json'))['version'])")
     git tag -a "v${VERSION}" -m "v${VERSION}"
-
-    # 8. Push commit and tag
-    git push origin main
     git push origin "v${VERSION}"
 
-    # 9. Create GitHub Release
+    # 11. Create GitHub Release (only this version's notes, not the full file)
+    # Extract the current version's section from RELEASE-NOTES.md, or write inline:
     gh release create "v${VERSION}" \
       --title "v${VERSION}" \
-      --notes-file RELEASE-NOTES.md
+      --notes "$(sed -n '/^## v'"${VERSION}"'/,/^---$/p' RELEASE-NOTES.md | sed '$d')"
 
 ---
 
