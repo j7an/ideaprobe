@@ -55,10 +55,16 @@ Quick reference for releasing a new version of IdeaProbe.
     git push origin "v${VERSION}"
 
     # 11. Create GitHub Release (only this version's notes, not the full file)
-    # Extract the current version's section from RELEASE-NOTES.md, or write inline:
+    # Extract the current version's section from RELEASE-NOTES.md:
+    NOTES="$(sed -n '/^## v'"${VERSION}"'/,/^---$/p' RELEASE-NOTES.md | sed '$d')"
+    if [ -z "$NOTES" ]; then
+      echo "ERROR: No release notes found for v${VERSION} in RELEASE-NOTES.md"
+      echo "Did you forget to update RELEASE-NOTES.md in step 6?"
+      exit 1
+    fi
     gh release create "v${VERSION}" \
       --title "v${VERSION}" \
-      --notes "$(sed -n '/^## v'"${VERSION}"'/,/^---$/p' RELEASE-NOTES.md | sed '$d')"
+      --notes "$NOTES"
 
 ---
 
