@@ -59,9 +59,22 @@ Agent(description="Sentiment scan for [idea]", prompt="You are ideaprobe:sentime
 
 ### Model Selection
 
-Use the least powerful model that can handle each role:
-- **Research agents** (market-researcher, competitor-scout, sentiment-scanner): Use a standard model. These agents perform structured web searches and extract data — moderate judgment required.
-- If a research agent returns shallow or incomplete results, re-dispatch that agent with a more capable model.
+Use the least powerful model that can handle each agent's role:
+
+- **Sentiment scanner**: Use a **fast, cheap model**. This agent performs repetitive
+  searches across multiple platforms and organizes quotes — mechanical work with no
+  judgment calls.
+- **Market researcher, Competitor scout**: Use a **standard model**. These agents
+  synthesize trends, estimate market size, identify competitive gaps — moderate
+  judgment required.
+
+Announce the model tier for each agent when dispatching, e.g.:
+"Launching market-researcher (standard), competitor-scout (standard),
+sentiment-scanner (fast)"
+
+If any research agent returns shallow or incomplete results, re-dispatch with the
+next tier up and announce the escalation:
+"Re-dispatching sentiment-scanner on a standard model — initial results were thin"
 
 ### Handling Results
 
@@ -104,7 +117,11 @@ Launch the **`ideaprobe:validation-reviewer`** agent. Provide the complete draft
 
 ### Model Selection
 
-Use the **most capable available model** for the validation reviewer. This agent must reason critically, detect bias, and challenge assumptions.
+The validation reviewer must cross-reference scoring rubrics, detect logical
+inconsistencies, and challenge assumptions — deep analytical reasoning. Use the
+**most capable available model**.
+
+Announce it: "Launching validation-reviewer (strongest model) to challenge the analysis"
 
 Review the feedback. If the reviewer identifies:
 - **Unjustified scores** — adjust the scores with explanation
