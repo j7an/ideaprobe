@@ -1,5 +1,32 @@
 # IdeaProbe Release Notes
 
+## v0.1.1 (2026-04-06)
+
+Test suite and bug fixes. No skill or agent changes.
+
+**Test Suite:**
+- Three-tier test pyramid: infrastructure (25 tests, ~4s), behavioral (4 tests, ~40s), integration (1 test, 10-30 min)
+- Infrastructure tests: hook output, version consistency, JSON manifests, YAML frontmatter, cross-references
+- Behavioral tests: focused skill-content prompts with 30s timeout (scoring dimensions, agent dispatch rules, verdict thresholds, skill routing)
+- Integration tests: scoring pipeline with pre-baked data (fast mode, ~50s) and full validation workflow with agent dispatch
+- Shared assertion library (`tests/test-helpers.sh`) modeled on Superpowers plugin
+- Test runner with `--behavioral`, `--all`, `--all --fast`, `--test`, `--verbose`, `--timeout` flags
+- Portable timeout: `timeout` → `gtimeout` → perl fallback for macOS compatibility
+
+**Bug Fixes:**
+- Fix `marketplace.json` schema — use marketplace directory format, not plugin manifest (#3)
+- Remove `skills`/`agents` fields from `plugin.json` — Claude Code discovers these by convention (#4)
+- Rename `getting-started` skill to `using-ideaprobe` for clarity (#5)
+- Fix `bump-version.sh --audit` grep ordering and path normalization (#2)
+
+**npm scripts:**
+- `npm test` — infrastructure only
+- `npm run test:behavioral` — + skill-content tests
+- `npm run test:all:fast` — + scoring pipeline (Sonnet, medium effort)
+- `npm run test:all` — + full validation workflow
+
+---
+
 ## v0.1.0 (2026-04-04)
 
 Initial release. Claude Code / Claude Desktop only.
