@@ -1,5 +1,17 @@
 # IdeaProbe Release Notes
 
+## v0.1.2 (2026-04-06)
+
+Fix agent model selection in orchestrating skills.
+
+**Fixes:**
+- Fix model selection in `idea-validation` — research agents now use three-tier semantic labels (fast/standard/capable) instead of inheriting parent model indiscriminately
+- Fix model selection in `idea-comparison` — add missing Model Selection section referencing the same three tiers
+- Orchestrating model now announces model tier at dispatch time for user visibility
+- Agents use `model: inherit` in frontmatter for cross-platform portability; tier selection is driven by skill instructions
+
+---
+
 ## v0.1.1 (2026-04-06)
 
 Test suite and bug fixes. No skill or agent changes.
