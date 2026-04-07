@@ -33,6 +33,18 @@ For 2-3 ideas: dispatch all validations in parallel. Each validation launches it
 
 For 4-5 ideas: dispatch in batches of 2-3 to avoid overwhelming the agent pool. Wait for the first batch to complete before starting the next.
 
+### Model Selection
+
+Follow the same model tiers as `idea-validation`:
+
+- **Sentiment scanners**: Fast, cheap model (mechanical search work)
+- **Market researchers, Competitor scouts**: Standard model (synthesis + judgment)
+- **Validation reviewer**: Most capable model (critical analysis)
+
+With 5 ideas, you're dispatching up to 15 research agents + 1 reviewer. Using
+cheaper models for research agents significantly reduces cost and improves speed.
+Announce the model tier for each agent so the user can gauge expected completion time.
+
 ### Per-Idea Validation
 
 For each idea, run the full `idea-validation` workflow:
