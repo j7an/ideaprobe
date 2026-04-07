@@ -2,7 +2,7 @@
   "name": "ideaprobe",
   "displayName": "IdeaProbe",
   "description": "Business idea validation \u2014 structured scoring, parallel research, and data-backed verdicts before you build",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "Jia \"Jay\" Tan"
   },
