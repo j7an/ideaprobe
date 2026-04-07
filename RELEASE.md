@@ -31,40 +31,29 @@ Quick reference for releasing a new version of IdeaProbe.
     # 5. Audit for any undeclared version references
     bash scripts/bump-version.sh --audit
 
-    # 6. Update RELEASE-NOTES.md
-    # Add a new section at the top: ## vX.Y.Z (YYYY-MM-DD)
-    # Only include changes for THIS version, not prior versions
-
-    # 7. Commit and push
-    git add package.json .claude-plugin/plugin.json RELEASE-NOTES.md
+    # 6. Commit and push
+    git add package.json .claude-plugin/plugin.json
     git commit -m "chore(release): v${VERSION}"
     git push -u origin "chore/release-v${VERSION}"
 
-    # 8. Create PR and merge
+    # 7. Create PR and merge
     gh pr create --title "chore(release): v${VERSION}" --body "Version bump to v${VERSION}"
     # Merge via GitHub, then continue to Phase 2
 
 ### Phase 2: Tag and release from main
 
-    # 9. Switch to main with the merged release commit
+    # 8. Switch to main with the merged release commit
     git checkout main && git pull origin main
 
-    # 10. Tag the release
+    # 9. Tag the release
     VERSION=$(python3 -c "import json; print(json.load(open('package.json'))['version'])")
     git tag -a "v${VERSION}" -m "v${VERSION}"
     git push origin "v${VERSION}"
 
-    # 11. Create GitHub Release (only this version's notes, not the full file)
-    # Extract the current version's section from RELEASE-NOTES.md:
-    NOTES="$(sed -n '/^## v'"${VERSION}"'/,/^---$/p' RELEASE-NOTES.md | sed '$d')"
-    if [ -z "$NOTES" ]; then
-      echo "ERROR: No release notes found for v${VERSION} in RELEASE-NOTES.md"
-      echo "Did you forget to update RELEASE-NOTES.md in step 6?"
-      exit 1
-    fi
+    # 10. Create GitHub Release (auto-generates notes from merged PRs)
     gh release create "v${VERSION}" \
       --title "v${VERSION}" \
-      --notes "$NOTES"
+      --generate-notes
 
 ---
 
@@ -113,7 +102,7 @@ Create the release manually:
 
     gh release create "v${VERSION}" \
       --title "v${VERSION}" \
-      --notes-file RELEASE-NOTES.md
+      --generate-notes
 
 ### Version bump committed but tag is wrong
 
