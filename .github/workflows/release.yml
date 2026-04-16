@@ -1,0 +1,21 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        options: [auto, patch, minor, major]
+        default: auto
+
+jobs:
+  tag:
+    uses: j7an/shared-workflows/.github/workflows/tag-release.yml@v2
+    with:
+      bump: ${{ inputs.bump }}
+    secrets:
+      RELEASE_BOT_PRIVATE_KEY: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+  publish:
+    needs: tag
+    uses: j7an/shared-workflows/.github/workflows/release.yml@v2
+    with:
+      tag: ${{ needs.tag.outputs.tag }}
